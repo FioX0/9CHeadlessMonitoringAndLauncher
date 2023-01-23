@@ -37,6 +37,7 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
             }
             Console.WriteLine("");
 
+            endpoints.Add("state_latest");
             return endpoints;
         }
 
