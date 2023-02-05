@@ -32,6 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.TitleLBL = new System.Windows.Forms.Label();
+            this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // backgroundWorker1
@@ -69,6 +70,10 @@
             this.TitleLBL.TabIndex = 2;
             this.TitleLBL.Text = "Snapshot Manager";
             // 
+            // backgroundWorker2
+            // 
+            this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWorkAsync);
+            // 
             // SnapshotForm
             // 
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -88,5 +93,6 @@
         private Label label1;
         private ProgressBar progressBar1;
         private Label TitleLBL;
+        private System.ComponentModel.BackgroundWorker backgroundWorker2;
     }
 }
