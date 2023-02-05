@@ -28,6 +28,9 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
 
         static int preload = 0;
 
+        static string pathnode = "";
+        static string ipnode = "";
+
         private delegate void SafeCallDelegate(int perc);
         private delegate void SafeCallDelegate2(string text);
 
@@ -43,11 +46,14 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
 
         public async void GetPath()
         {
-            var path = ShowDialog("Test", "123");
-            Start(path);
+            var path = ShowDialog("Please provide snapshot path. (Root Path, before \\9c-main-partition)", "Snapshot Path");
+            var ip = ShowDialog("Please provide IP for -H parameter.", "NodeIP");
+            pathnode = path;
+            ipnode = ip;
+            Start(path, ip);
         }
 
-        public async void Start(string chainpath)
+        public async void Start(string chainpath, string ip)
         {
             //proof of concept code below
 
@@ -74,20 +80,20 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
                 folderlist1 = folderlist;
             }
 
-            ////manage Snapshot
-            //var result = await SnapshotManager(basicsetupdone, chainpath);
+            //manage Snapshot
+            var result = await SnapshotManager(basicsetupdone, chainpath);
 
-            //while (preload == 0)
-            //{
-            //    await Task.Delay(1000);
-            //}
+            while (preload == 0)
+            {
+                await Task.Delay(1000);
+            }
             //Launch Node after setup is done.
-            //await LaunchNode(chainpath + "\\9c-main-partition");
+            await LaunchNode(chainpath + "\\9c-main-partition", ip);
             backgroundWorker2.RunWorkerAsync();
             this.Hide();
         }
 
-        public async Task<bool> LaunchNode(string path)
+        public async Task<bool> LaunchNode(string path, string ip)
         {
             new Thread(() =>
             {
@@ -102,7 +108,7 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
                 var process = new Process { StartInfo = startInfo };
 
                 process.Start();
-                process.StandardInput.WriteLine(@"""C:\Users\User\AppData\Local\Programs\Nine Chronicles\resources\app\publish\NineChronicles.Headless.Executable""  -V=100360/AB2da648b9154F2cCcAFBD85e0Bc3d51f97330Fc/MEQCIEaMO9Ubu73pV9lYK0TldM.o0hhbA9wuFaZNOnocvmGLAiA3N5jT00saE3sRyQlchyLMas8FewctlesG7+0ATz2cfw==/ZHU4OmxhdW5jaGVydTQyOjIvNGQxMWI4YzU1Zjg1ZTQ1YTgzYWYwMmE5NTA4YTRhYjIxMGMwZTU1N3U2OnBsYXllcnU0MjoxLzhmZjdkNWEwYmI4YmM1MjNjZDM4NzVjNGY5NTlkNGRhMTNlYzkwY2F1OTp0aW1lc3RhbXB1MTA6MjAyMy0wMi0wMmU=  -G=https://release.nine-chronicles.com/genesis-block-9c-main  --store-type=rocksdb  --store-path=C:\\snapshot\\9c-main-partition\\ -H=45.85.147.76 --peer=027bd36895d68681290e570692ad3736750ceaab37be402442ffb203967f98f7b6,9c-main-tcp-seed-1.planetarium.dev,31234  --peer=02f164e3139e53eef2c17e52d99d343b8cbdb09eeed88af46c352b1c8be6329d71,9c-main-tcp-seed-2.planetarium.dev,31234  --peer=0247e289aa332260b99dfd50e578f779df9e6702d67e50848bb68f3e0737d9b9a5,9c-main-tcp-seed-3.planetarium.dev,31234  -T=030ffa9bd579ee1503ce008394f687c182279da913bfaec12baca34e79698a7cd1  --no-miner --graphql-server  --graphql-host=localhost  --graphql-port=23061  --confirmations=0  --minimum-broadcast-target=20  --bucket-size=20  --chain-tip-stale-behavior-type=reboot  --tip-timeout=180  --tx-life-time=60 --skip-preload=false");
+                process.StandardInput.WriteLine(@"""C:\Users\User\AppData\Local\Programs\Nine Chronicles\resources\app\publish\NineChronicles.Headless.Executable""  -V=100360/AB2da648b9154F2cCcAFBD85e0Bc3d51f97330Fc/MEQCIEaMO9Ubu73pV9lYK0TldM.o0hhbA9wuFaZNOnocvmGLAiA3N5jT00saE3sRyQlchyLMas8FewctlesG7+0ATz2cfw==/ZHU4OmxhdW5jaGVydTQyOjIvNGQxMWI4YzU1Zjg1ZTQ1YTgzYWYwMmE5NTA4YTRhYjIxMGMwZTU1N3U2OnBsYXllcnU0MjoxLzhmZjdkNWEwYmI4YmM1MjNjZDM4NzVjNGY5NTlkNGRhMTNlYzkwY2F1OTp0aW1lc3RhbXB1MTA6MjAyMy0wMi0wMmU=  -G=https://release.nine-chronicles.com/genesis-block-9c-main  --store-type=rocksdb  --store-path=" + path + " -H=" + ip + " --peer=027bd36895d68681290e570692ad3736750ceaab37be402442ffb203967f98f7b6,9c-main-tcp-seed-1.planetarium.dev,31234  --peer=02f164e3139e53eef2c17e52d99d343b8cbdb09eeed88af46c352b1c8be6329d71,9c-main-tcp-seed-2.planetarium.dev,31234  --peer=0247e289aa332260b99dfd50e578f779df9e6702d67e50848bb68f3e0737d9b9a5,9c-main-tcp-seed-3.planetarium.dev,31234  -T=030ffa9bd579ee1503ce008394f687c182279da913bfaec12baca34e79698a7cd1  --no-miner --graphql-server  --graphql-host=localhost  --graphql-port=23061  --confirmations=0  --minimum-broadcast-target=20  --bucket-size=20  --chain-tip-stale-behavior-type=reboot  --tip-timeout=180  --tx-life-time=60 --skip-preload=false");
 
             }).Start();
 
@@ -161,7 +167,7 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
                 Text = caption,
                 StartPosition = FormStartPosition.CenterScreen
             };
-            System.Windows.Forms.Label textLabel = new System.Windows.Forms.Label() { Left = 50, Top = 20, Text = text };
+            System.Windows.Forms.Label textLabel = new System.Windows.Forms.Label() { Left = 50, Top = 20, Width = 400, Text = text };
             System.Windows.Forms.TextBox textBox = new System.Windows.Forms.TextBox() { Left = 50, Top = 50, Width = 400 };
             System.Windows.Forms.Button confirmation = new System.Windows.Forms.Button() { Text = "Ok", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
             confirmation.Click += (sender, e) => { prompt.Close(); };
@@ -194,7 +200,6 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
                                 Thread.CurrentThread.IsBackground = true;
                                 lWebClient.DownloadFileCompleted += new AsyncCompletedEventHandler(FileDone);
                                 lWebClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Wc_DownloadProgressChanged);
-                                //await lWebClient.DownloadFileTaskAsync("https://snapshots.nine-chronicles.com/main/partition/full/9c-main-snapshot.zip", "snapshot.zip");
                                 await lWebClient.DownloadFileTaskAsync("https://snapshots.nine-chronicles.com/main/partition/snapshot-" + snapshoturl + "-" + snapshoturl + ".zip", chainpath1 + "\\temp\\snapshot-" + snapshoturl + "-" + snapshoturl + ".zip");
                             }
                             catch (Exception ex) { Console.WriteLine("Unstable Connection, download failed"); Console.ReadLine(); }
@@ -210,7 +215,6 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
                                 Thread.CurrentThread.IsBackground = true;
                                 lWebClient.DownloadFileCompleted += new AsyncCompletedEventHandler(FileDone);
                                 lWebClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(Wc_DownloadProgressChanged);
-                                //await lWebClient.DownloadFileTaskAsync("https://snapshots.nine-chronicles.com/main/partition/full/9c-main-snapshot.zip", "snapshot.zip");
                                 await lWebClient.DownloadFileTaskAsync("https://snapshots.nine-chronicles.com/main/partition/" + snapshoturl + ".zip", chainpath1 + "\\temp\\" + snapshoturl + ".zip");
                             }
                             catch (Exception ex) { Console.WriteLine("Unstable Connection, download failed"); Console.ReadLine(); }
@@ -309,7 +313,7 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
                         if (ninetip.Result - nodetip.Result > 40)
                         {
                             await KillNode();
-                            await LaunchNode("");
+                            await LaunchNode(pathnode,ipnode);
                             i = 1;
                             await Task.Delay(10000);
                         }
