@@ -322,7 +322,7 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
 
         public async Task<bool> checkIfPreloading()
         {
-            var client = new RestClient("http://45.85.147.76:23061/graphql");
+            var client = new RestClient("http://localhost:23061/graphql");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AddHeader("Content-Type", "application/json");
@@ -339,7 +339,7 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
 
         public async Task<int> CheckLocalNodeTopBlock()
         {
-            var client = new RestClient("http://45.85.147.76:23061/graphql");
+            var client = new RestClient("http://localhost:23061/graphql");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AddHeader("Content-Type", "application/json");
