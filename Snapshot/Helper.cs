@@ -48,7 +48,7 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
             if (progressBar.InvokeRequired)
             {
                 var d = new MainForm.SafeCallDelegateProgressBar(UpdateProgressBar);
-                progressBar.Invoke(d, new object[] { percentage });
+                progressBar.Invoke(d, new object[] { progressBar, percentage });
 
             }
             else
@@ -62,7 +62,7 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
             if (label.InvokeRequired)
             {
                 var d = new MainForm.SafeCallDelegateLabel(UpdateStatusLabel);
-                label.Invoke(d, new object[] { text });
+                label.Invoke(d, new object[] { label, text });
 
             }
             else

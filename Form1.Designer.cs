@@ -42,8 +42,6 @@
             this.panelTitleBar = new System.Windows.Forms.Panel();
             this.iconButton9 = new FontAwesome.Sharp.IconButton();
             this.label1 = new System.Windows.Forms.Label();
-
-            #region SnapshotMenu
             this.snapshotPanel = new System.Windows.Forms.Panel();
             this.snapshotMenuActionProgressTLT = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
@@ -57,18 +55,25 @@
             this.snapshotMenuStartBTN = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.snapshotMenuTitle = new System.Windows.Forms.Label();
+            this.snapshotConfigPanel2 = new System.Windows.Forms.Panel();
+            this.snapshotConfigBTN = new System.Windows.Forms.Button();
+            this.snapshotConfigCurrentPathLBL = new System.Windows.Forms.Label();
+            this.snapshotConfigCurrentPathTLT = new System.Windows.Forms.Label();
+            this.snapshotConfigInnerTLT = new System.Windows.Forms.Label();
+            this.snapshotConfigTitlePanel = new System.Windows.Forms.Panel();
+            this.snapshotConfigTitleLBL = new System.Windows.Forms.Label();
             this.SnapshotStartWorker = new System.ComponentModel.BackgroundWorker();
             this.SnapshotDownloadWrkr = new System.ComponentModel.BackgroundWorker();
-            this.panelTitleBar.SuspendLayout();
-            this.snapshotPanel.SuspendLayout();
-            this.panel2.SuspendLayout();
-            #endregion SnapshotMenu
-
+            this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
             this.panelMenu.SuspendLayout();
             this.panel1.SuspendLayout();
             this.IconPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-
+            this.panelTitleBar.SuspendLayout();
+            this.snapshotPanel.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.snapshotConfigPanel2.SuspendLayout();
+            this.snapshotConfigTitlePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelMenu
@@ -84,7 +89,7 @@
             this.panelMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelMenu.Location = new System.Drawing.Point(0, 0);
             this.panelMenu.Name = "panelMenu";
-            this.panelMenu.Size = new System.Drawing.Size(190, 450);
+            this.panelMenu.Size = new System.Drawing.Size(190, 397);
             this.panelMenu.TabIndex = 0;
             // 
             // iconButton8
@@ -99,7 +104,7 @@
             this.iconButton8.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.iconButton8.IconSize = 30;
             this.iconButton8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton8.Location = new System.Drawing.Point(0, 401);
+            this.iconButton8.Location = new System.Drawing.Point(0, 348);
             this.iconButton8.Name = "iconButton8";
             this.iconButton8.Padding = new System.Windows.Forms.Padding(10, 0, 0, 10);
             this.iconButton8.Size = new System.Drawing.Size(190, 49);
@@ -131,6 +136,7 @@
             this.iconButton6.Text = "iconButton6";
             this.iconButton6.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.iconButton6.UseVisualStyleBackColor = true;
+            this.iconButton6.Click += new System.EventHandler(this.LoadSnapshotConfigMenu);
             // 
             // iconButton5
             // 
@@ -273,7 +279,7 @@
             this.panelTitleBar.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTitleBar.Location = new System.Drawing.Point(190, 0);
             this.panelTitleBar.Name = "panelTitleBar";
-            this.panelTitleBar.Size = new System.Drawing.Size(601, 44);
+            this.panelTitleBar.Size = new System.Drawing.Size(457, 44);
             this.panelTitleBar.TabIndex = 1;
             // 
             // iconButton9
@@ -287,7 +293,7 @@
             this.iconButton9.IconColor = System.Drawing.Color.White;
             this.iconButton9.IconFont = FontAwesome.Sharp.IconFont.Solid;
             this.iconButton9.IconSize = 15;
-            this.iconButton9.Location = new System.Drawing.Point(567, 0);
+            this.iconButton9.Location = new System.Drawing.Point(423, 0);
             this.iconButton9.Name = "iconButton9";
             this.iconButton9.Size = new System.Drawing.Size(34, 44);
             this.iconButton9.TabIndex = 0;
@@ -300,13 +306,11 @@
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
             this.label1.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
-            this.label1.Size = new System.Drawing.Size(561, 44);
+            this.label1.Size = new System.Drawing.Size(534, 44);
             this.label1.TabIndex = 3;
             this.label1.Text = "Nine Chronicles Node Monitor";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label1_MouseDown);
-
-            #region SnapshotMenu
             // 
             // snapshotPanel
             // 
@@ -325,7 +329,7 @@
             this.snapshotPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.snapshotPanel.Location = new System.Drawing.Point(190, 44);
             this.snapshotPanel.Name = "snapshotPanel";
-            this.snapshotPanel.Size = new System.Drawing.Size(601, 406);
+            this.snapshotPanel.Size = new System.Drawing.Size(457, 353);
             this.snapshotPanel.TabIndex = 2;
             this.snapshotPanel.Visible = false;
             // 
@@ -333,7 +337,7 @@
             // 
             this.snapshotMenuActionProgressTLT.AutoSize = true;
             this.snapshotMenuActionProgressTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuActionProgressTLT.Location = new System.Drawing.Point(227, 223);
+            this.snapshotMenuActionProgressTLT.Location = new System.Drawing.Point(167, 223);
             this.snapshotMenuActionProgressTLT.Name = "snapshotMenuActionProgressTLT";
             this.snapshotMenuActionProgressTLT.Size = new System.Drawing.Size(105, 14);
             this.snapshotMenuActionProgressTLT.TabIndex = 10;
@@ -341,17 +345,18 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(191, 250);
+            this.progressBar1.Location = new System.Drawing.Point(157, 252);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(180, 23);
+            this.progressBar1.Size = new System.Drawing.Size(133, 23);
             this.progressBar1.TabIndex = 9;
             // 
             // snapshotMenuActionLBL
             // 
             this.snapshotMenuActionLBL.AutoSize = true;
-            this.snapshotMenuActionLBL.Location = new System.Drawing.Point(288, 188);
+            this.snapshotMenuActionLBL.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.snapshotMenuActionLBL.Location = new System.Drawing.Point(205, 188);
             this.snapshotMenuActionLBL.Name = "snapshotMenuActionLBL";
-            this.snapshotMenuActionLBL.Size = new System.Drawing.Size(36, 15);
+            this.snapshotMenuActionLBL.Size = new System.Drawing.Size(40, 14);
             this.snapshotMenuActionLBL.TabIndex = 8;
             this.snapshotMenuActionLBL.Text = "None";
             // 
@@ -359,7 +364,7 @@
             // 
             this.snapshotMenuActionTLT.AutoSize = true;
             this.snapshotMenuActionTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuActionTLT.Location = new System.Drawing.Point(232, 188);
+            this.snapshotMenuActionTLT.Location = new System.Drawing.Point(160, 188);
             this.snapshotMenuActionTLT.Name = "snapshotMenuActionTLT";
             this.snapshotMenuActionTLT.Size = new System.Drawing.Size(50, 14);
             this.snapshotMenuActionTLT.TabIndex = 7;
@@ -369,7 +374,7 @@
             // 
             this.snapshotMenuFileLBL.AutoSize = true;
             this.snapshotMenuFileLBL.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuFileLBL.Location = new System.Drawing.Point(288, 156);
+            this.snapshotMenuFileLBL.Location = new System.Drawing.Point(187, 156);
             this.snapshotMenuFileLBL.Name = "snapshotMenuFileLBL";
             this.snapshotMenuFileLBL.Size = new System.Drawing.Size(40, 14);
             this.snapshotMenuFileLBL.TabIndex = 6;
@@ -379,17 +384,17 @@
             // 
             this.snapshotMenuFileTLT.AutoSize = true;
             this.snapshotMenuFileTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuFileTLT.Location = new System.Drawing.Point(227, 156);
+            this.snapshotMenuFileTLT.Location = new System.Drawing.Point(160, 156);
             this.snapshotMenuFileTLT.Name = "snapshotMenuFileTLT";
-            this.snapshotMenuFileTLT.Size = new System.Drawing.Size(55, 14);
+            this.snapshotMenuFileTLT.Size = new System.Drawing.Size(33, 14);
             this.snapshotMenuFileTLT.TabIndex = 5;
-            this.snapshotMenuFileTLT.Text = "On File:";
+            this.snapshotMenuFileTLT.Text = "File:";
             // 
             // currentStatusTLT
             // 
             this.currentStatusTLT.AutoSize = true;
             this.currentStatusTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.currentStatusTLT.Location = new System.Drawing.Point(177, 125);
+            this.currentStatusTLT.Location = new System.Drawing.Point(157, 125);
             this.currentStatusTLT.Name = "currentStatusTLT";
             this.currentStatusTLT.Size = new System.Drawing.Size(105, 14);
             this.currentStatusTLT.TabIndex = 4;
@@ -399,7 +404,7 @@
             // 
             this.SnapshotMenuCurrentStatusLBL.AutoSize = true;
             this.SnapshotMenuCurrentStatusLBL.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.SnapshotMenuCurrentStatusLBL.Location = new System.Drawing.Point(288, 125);
+            this.SnapshotMenuCurrentStatusLBL.Location = new System.Drawing.Point(259, 125);
             this.SnapshotMenuCurrentStatusLBL.Name = "SnapshotMenuCurrentStatusLBL";
             this.SnapshotMenuCurrentStatusLBL.Size = new System.Drawing.Size(31, 14);
             this.SnapshotMenuCurrentStatusLBL.TabIndex = 3;
@@ -409,15 +414,16 @@
             // 
             this.snapshotMenuStatusTitle.AutoSize = true;
             this.snapshotMenuStatusTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuStatusTitle.Location = new System.Drawing.Point(204, 90);
+            this.snapshotMenuStatusTitle.Location = new System.Drawing.Point(148, 90);
             this.snapshotMenuStatusTitle.Name = "snapshotMenuStatusTitle";
             this.snapshotMenuStatusTitle.Size = new System.Drawing.Size(151, 18);
             this.snapshotMenuStatusTitle.TabIndex = 2;
             this.snapshotMenuStatusTitle.Text = "Snapshot Status";
+            this.snapshotMenuStatusTitle.Click += new System.EventHandler(this.snapshotMenuStatusTitle_Click);
             // 
             // snapshotMenuStartBTN
             // 
-            this.snapshotMenuStartBTN.Location = new System.Drawing.Point(244, 339);
+            this.snapshotMenuStartBTN.Location = new System.Drawing.Point(187, 281);
             this.snapshotMenuStartBTN.Name = "snapshotMenuStartBTN";
             this.snapshotMenuStartBTN.Size = new System.Drawing.Size(75, 23);
             this.snapshotMenuStartBTN.TabIndex = 1;
@@ -431,18 +437,92 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(601, 56);
+            this.panel2.Size = new System.Drawing.Size(457, 56);
             this.panel2.TabIndex = 0;
             // 
             // snapshotMenuTitle
             // 
             this.snapshotMenuTitle.AutoSize = true;
             this.snapshotMenuTitle.Font = new System.Drawing.Font("Verdana", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuTitle.Location = new System.Drawing.Point(188, 16);
+            this.snapshotMenuTitle.Location = new System.Drawing.Point(135, 16);
             this.snapshotMenuTitle.Name = "snapshotMenuTitle";
             this.snapshotMenuTitle.Size = new System.Drawing.Size(183, 25);
             this.snapshotMenuTitle.TabIndex = 0;
             this.snapshotMenuTitle.Text = "Snapshot Menu";
+            // 
+            // snapshotConfigPanel2
+            // 
+            this.snapshotConfigPanel2.BackColor = System.Drawing.Color.White;
+            this.snapshotConfigPanel2.Controls.Add(this.snapshotConfigBTN);
+            this.snapshotConfigPanel2.Controls.Add(this.snapshotConfigCurrentPathLBL);
+            this.snapshotConfigPanel2.Controls.Add(this.snapshotConfigCurrentPathTLT);
+            this.snapshotConfigPanel2.Controls.Add(this.snapshotConfigInnerTLT);
+            this.snapshotConfigPanel2.Controls.Add(this.snapshotConfigTitlePanel);
+            this.snapshotConfigPanel2.Location = new System.Drawing.Point(625, 54);
+            this.snapshotConfigPanel2.Name = "snapshotConfigPanel2";
+            this.snapshotConfigPanel2.Size = new System.Drawing.Size(562, 375);
+            this.snapshotConfigPanel2.TabIndex = 3;
+            this.snapshotConfigPanel2.Visible = false;
+            // 
+            // snapshotConfigBTN
+            // 
+            this.snapshotConfigBTN.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.snapshotConfigBTN.Location = new System.Drawing.Point(80, 153);
+            this.snapshotConfigBTN.Name = "snapshotConfigBTN";
+            this.snapshotConfigBTN.Size = new System.Drawing.Size(75, 23);
+            this.snapshotConfigBTN.TabIndex = 4;
+            this.snapshotConfigBTN.Text = "Change";
+            this.snapshotConfigBTN.UseVisualStyleBackColor = true;
+            this.snapshotConfigBTN.Click += new System.EventHandler(this.snapshotPathBTN_Click);
+            // 
+            // snapshotConfigCurrentPathLBL
+            // 
+            this.snapshotConfigCurrentPathLBL.AutoSize = true;
+            this.snapshotConfigCurrentPathLBL.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.snapshotConfigCurrentPathLBL.Location = new System.Drawing.Point(176, 125);
+            this.snapshotConfigCurrentPathLBL.Name = "snapshotConfigCurrentPathLBL";
+            this.snapshotConfigCurrentPathLBL.Size = new System.Drawing.Size(40, 14);
+            this.snapshotConfigCurrentPathLBL.TabIndex = 3;
+            this.snapshotConfigCurrentPathLBL.Text = "None";
+            // 
+            // snapshotConfigCurrentPathTLT
+            // 
+            this.snapshotConfigCurrentPathTLT.AutoSize = true;
+            this.snapshotConfigCurrentPathTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.snapshotConfigCurrentPathTLT.Location = new System.Drawing.Point(80, 125);
+            this.snapshotConfigCurrentPathTLT.Name = "snapshotConfigCurrentPathTLT";
+            this.snapshotConfigCurrentPathTLT.Size = new System.Drawing.Size(93, 14);
+            this.snapshotConfigCurrentPathTLT.TabIndex = 2;
+            this.snapshotConfigCurrentPathTLT.Text = "Current Path:";
+            // 
+            // snapshotConfigInnerTLT
+            // 
+            this.snapshotConfigInnerTLT.AutoSize = true;
+            this.snapshotConfigInnerTLT.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.snapshotConfigInnerTLT.Location = new System.Drawing.Point(80, 90);
+            this.snapshotConfigInnerTLT.Name = "snapshotConfigInnerTLT";
+            this.snapshotConfigInnerTLT.Size = new System.Drawing.Size(136, 18);
+            this.snapshotConfigInnerTLT.TabIndex = 1;
+            this.snapshotConfigInnerTLT.Text = "Snapshot Path";
+            // 
+            // snapshotConfigTitlePanel
+            // 
+            this.snapshotConfigTitlePanel.Controls.Add(this.snapshotConfigTitleLBL);
+            this.snapshotConfigTitlePanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.snapshotConfigTitlePanel.Location = new System.Drawing.Point(0, 0);
+            this.snapshotConfigTitlePanel.Name = "snapshotConfigTitlePanel";
+            this.snapshotConfigTitlePanel.Size = new System.Drawing.Size(562, 59);
+            this.snapshotConfigTitlePanel.TabIndex = 0;
+            // 
+            // snapshotConfigTitleLBL
+            // 
+            this.snapshotConfigTitleLBL.AutoSize = true;
+            this.snapshotConfigTitleLBL.Font = new System.Drawing.Font("Verdana", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.snapshotConfigTitleLBL.Location = new System.Drawing.Point(188, 16);
+            this.snapshotConfigTitleLBL.Name = "snapshotConfigTitleLBL";
+            this.snapshotConfigTitleLBL.Size = new System.Drawing.Size(194, 25);
+            this.snapshotConfigTitleLBL.TabIndex = 0;
+            this.snapshotConfigTitleLBL.Text = "Snapshot Config";
             // 
             // SnapshotStartWorker
             // 
@@ -451,15 +531,13 @@
             // SnapshotDownloadWrkr
             // 
             this.SnapshotDownloadWrkr.DoWork += new System.ComponentModel.DoWorkEventHandler(this.SnapshotDownloadWorker);
-            #endregion SnapshotMenu
-
-
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(791, 450);
+            this.ClientSize = new System.Drawing.Size(647, 397);
+            this.Controls.Add(this.snapshotConfigPanel2);
             this.Controls.Add(this.snapshotPanel);
             this.Controls.Add(this.panelTitleBar);
             this.Controls.Add(this.panelMenu);
@@ -471,12 +549,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelTitleBar.ResumeLayout(false);
             this.panelTitleBar.PerformLayout();
-            #region SnapshotMenu
             this.snapshotPanel.ResumeLayout(false);
             this.snapshotPanel.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            #endregion SnapshotMenu
+            this.snapshotConfigPanel2.ResumeLayout(false);
+            this.snapshotConfigPanel2.PerformLayout();
+            this.snapshotConfigTitlePanel.ResumeLayout(false);
+            this.snapshotConfigTitlePanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -521,5 +601,13 @@
         private Label snapshotMenuStatusTitle;
         private System.ComponentModel.BackgroundWorker SnapshotStartWorker;
         private System.ComponentModel.BackgroundWorker SnapshotDownloadWrkr;
+        private Panel snapshotConfigPanel2;
+        private Label snapshotConfigInnerTLT;
+        private Panel snapshotConfigTitlePanel;
+        private Label snapshotConfigTitleLBL;
+        private Button snapshotConfigBTN;
+        private Label snapshotConfigCurrentPathLBL;
+        private Label snapshotConfigCurrentPathTLT;
+        private FolderBrowserDialog folderBrowserDialog2;
     }
 }

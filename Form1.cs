@@ -1,3 +1,4 @@
+using _9CHeadlessMonitoringAndLauncher.Snapshot;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using System.IO;
@@ -233,60 +234,60 @@ namespace _9CHeadlessMonitoringAndLauncher
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
 
-        private void folderBrowserDialog1_HelpRequest(object sender, EventArgs e)
-        {
-
-        }
-
         private void snapshotPathBTN_Click(object sender, EventArgs e)
         {
-            //if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-            //{
-            //    //snapshotConfigCurrentPathLBL.Text = folderBrowserDialog1.SelectedPath.ToString();
-            //}
+            DialogResult result = folderBrowserDialog2.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                snapshotConfigCurrentPathLBL.Text = folderBrowserDialog2.SelectedPath;
+            }
         }
 
         private void snapshotMenuStartSnapshot(object sender, EventArgs e)
         {
             progressBarReference = progressBar1;
+            Helper.UpdateStatusLabel(SnapshotMenuCurrentStatusLBL, "Running");
+            snapshotMenuStartBTN.Enabled = false;
             SnapshotStartWorker.RunWorkerAsync();
         }
 
         private async void SnapshotStartWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            //////proof of concept code below
+            ////proof of concept code below
 
-            //bool basicsetupdone = false;
+            bool basicsetupdone = false;
 
-            //List<string> folderlist = new List<string>();
+            string folderpath = snapshotConfigCurrentPathLBL.Text;
 
-            //var setupcheck = Directory.Exists(snapshotConfigCurrentPathLBL.Text + "\\9c-main-partition");
-            //var donexistst = Directory.Exists(snapshotConfigCurrentPathLBL.Text + "\\done");
+            List<string> folderlist = new List<string>();
 
-            //if (setupcheck && donexistst)
-            //{
-            //    basicsetupdone = true;
-            //    folderlist = Directory.GetFiles(snapshotConfigCurrentPathLBL.Text + "\\done", "*.*", SearchOption.AllDirectories).ToList();
-            //    folderlist1 = folderlist;
-            //}
-            //else
-            //{
-            //    Directory.CreateDirectory(snapshotConfigCurrentPathLBL.Text + "\\9c-main-partition");
-            //    Directory.CreateDirectory(snapshotConfigCurrentPathLBL.Text + "\\done");
-            //    folderlist = Directory.GetFiles(snapshotConfigCurrentPathLBL.Text + "\\done", "*.*", SearchOption.AllDirectories).ToList();
-            //    folderlist1 = folderlist;
-            //}
+            var setupcheck = Directory.Exists(snapshotConfigCurrentPathLBL.Text + "\\9c-main-partition");
+            var donexistst = Directory.Exists(snapshotConfigCurrentPathLBL.Text + "\\done");
 
-            //////manage Snapshot
-            //var snapshotlist = await Snapshot.Helper.SnapshotCallEndpoint();
+            if (setupcheck && donexistst)
+            {
+                basicsetupdone = true;
+                folderlist = Directory.GetFiles(snapshotConfigCurrentPathLBL.Text + "\\done", "*.*", SearchOption.AllDirectories).ToList();
+                folderlist1 = folderlist;
+            }
+            else
+            {
+                Directory.CreateDirectory(snapshotConfigCurrentPathLBL.Text + "\\9c-main-partition");
+                Directory.CreateDirectory(snapshotConfigCurrentPathLBL.Text + "\\done");
+                folderlist = Directory.GetFiles(snapshotConfigCurrentPathLBL.Text + "\\done", "*.*", SearchOption.AllDirectories).ToList();
+                folderlist1 = folderlist;
+            }
 
-            //snapshotlist1 = snapshotlist;
+            ////manage Snapshot
+            var snapshotlist = await Snapshot.Helper.SnapshotCallEndpoint();
 
-            //chainpath1 = snapshotConfigCurrentPathLBL.Text;
+            snapshotlist1 = snapshotlist;
 
-            //Directory.CreateDirectory(snapshotConfigCurrentPathLBL.Text + "\\temp");
+            chainpath1 = snapshotConfigCurrentPathLBL.Text;
 
-            //SnapshotDownloadWrkr.RunWorkerAsync();
+            Directory.CreateDirectory(snapshotConfigCurrentPathLBL.Text + "\\temp");
+
+            SnapshotDownloadWrkr.RunWorkerAsync();
         }
 
         private void SnapshotDownloadWorker(object sender, DoWorkEventArgs e)
@@ -299,7 +300,7 @@ namespace _9CHeadlessMonitoringAndLauncher
                 {
                     if (!folderlist1.Contains(chainpath1 + "\\done\\" + snapshoturl))
                     {
-                        Snapshot.Helper.UpdateStatusLabel(snapshotMenuFileLBL, "Epoch: " + snapshoturl);
+                        Snapshot.Helper.UpdateStatusLabel(snapshotMenuFileLBL, "Epoch " + snapshoturl);
                         download = 1;
 
                         if (!snapshoturl.Contains("latest"))
@@ -352,7 +353,7 @@ namespace _9CHeadlessMonitoringAndLauncher
                         {
                             var epoch = snapshotlist1[y - 2];
 
-                            Snapshot.Helper.UpdateStatusLabel(snapshotMenuFileLBL, "Epoch: " + epoch);
+                            Snapshot.Helper.UpdateStatusLabel(snapshotMenuFileLBL, "Epoch " + epoch);
                             ZipFile.ExtractToDirectory(chainpath1 + "\\temp\\snapshot-" + epoch + "-" + epoch + ".zip", chainpath1 + "\\9c-main-partition\\", Encoding.UTF8, true);
                             File.Delete(chainpath1 + "\\temp\\snapshot-" + epoch + "-" + epoch + ".zip");
                             File.WriteAllText(chainpath1 + "\\done\\" + epoch, "done");
@@ -363,20 +364,28 @@ namespace _9CHeadlessMonitoringAndLauncher
                     ZipFile.ExtractToDirectory(chainpath1 + "\\temp\\state_latest.zip", chainpath1 + "\\9c-main-partition\\", Encoding.UTF8, true);
                     File.Delete(chainpath1 + "\\temp\\state_latest.zip");
                 }
+                Snapshot.Helper.UpdateStatusLabel(snapshotMenuActionLBL, "Done");
             }
             catch (Exception ex) { Console.WriteLine(); MessageBox.Show(ex.Message); };
         }
 
-        private void LoadSnapshotMenu(object sender, EventArgs e)
+        private async void LoadSnapshotMenu(object sender, EventArgs e)
         {
+            snapshotConfigPanel2.Visible = false;
             snapshotPanel.Visible = true;
-            snapshotPanel.Location = new Point(190, 50);
+            snapshotPanel.Dock = DockStyle.Fill;
         }
 
-        private void LoadSnapshotConfigMenu(object sender, EventArgs e)
+        private async void LoadSnapshotConfigMenu(object sender, EventArgs e)
         {
             snapshotPanel.Visible = false;
-            snapshotConfigPanel.Visible = true;
+            snapshotConfigPanel2.Visible = true;
+            snapshotConfigPanel2.Dock = DockStyle.Fill;
+        }
+
+        private void snapshotMenuStatusTitle_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
