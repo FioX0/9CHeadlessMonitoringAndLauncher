@@ -2,7 +2,9 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,6 +41,45 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
 
             endpoints.Add("state_latest");
             return endpoints;
+        }
+
+        public static void UpdateProgressBar(ProgressBar progressBar, int percentage)
+        {
+            if (progressBar.InvokeRequired)
+            {
+                var d = new MainForm.SafeCallDelegateProgressBar(UpdateProgressBar);
+                progressBar.Invoke(d, new object[] { percentage });
+
+            }
+            else
+            {
+                progressBar.Value = percentage;
+            }
+        }
+
+        public static void UpdateStatusLabel(Label label, string text)
+        {
+            if (label.InvokeRequired)
+            {
+                var d = new MainForm.SafeCallDelegateLabel(UpdateStatusLabel);
+                label.Invoke(d, new object[] { text });
+
+            }
+            else
+            {
+                label.Text = text;
+            }
+        }
+
+        public static void FileDone(object sender, AsyncCompletedEventArgs e)
+        {
+            MainForm.download = 0;
+        }
+
+        public static void Wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            Console.WriteLine(e.ProgressPercentage);
+            UpdateProgressBar(MainForm.progressBarReference, e.ProgressPercentage);
         }
 
     }
