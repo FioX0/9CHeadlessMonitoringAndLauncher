@@ -1,4 +1,7 @@
+using _9CHeadlessMonitoringAndLauncher.Models;
 using _9CHeadlessMonitoringAndLauncher.Snapshot;
+using Microsoft.VisualBasic.Devices;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using System.IO;
@@ -7,6 +10,7 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Input;
 using static System.Net.Mime.MediaTypeNames;
 using Application = System.Windows.Forms.Application;
 
@@ -49,7 +53,7 @@ namespace _9CHeadlessMonitoringAndLauncher
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
-        private void panelTitleBar_MouseDown(object sender, MouseEventArgs e)
+        private void panelTitleBar_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
@@ -228,7 +232,7 @@ namespace _9CHeadlessMonitoringAndLauncher
             Application.Exit();
         }
 
-        private void label1_MouseDown(object sender, MouseEventArgs e)
+        private void label1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
@@ -240,6 +244,15 @@ namespace _9CHeadlessMonitoringAndLauncher
             if (result == DialogResult.OK)
             {
                 snapshotConfigCurrentPathLBL.Text = folderBrowserDialog2.SelectedPath;
+            }
+
+            SnapshotModel snapshotModel = new SnapshotModel();
+            snapshotModel.snapshotPath = snapshotConfigCurrentPathLBL.Text;
+            Directory.CreateDirectory(Application.StartupPath + "/config/");
+            using (StreamWriter file = File.CreateText(Application.StartupPath + "/config/snapshotconfig.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, snapshotModel);
             }
         }
 
@@ -365,6 +378,7 @@ namespace _9CHeadlessMonitoringAndLauncher
                     File.Delete(chainpath1 + "\\temp\\state_latest.zip");
                 }
                 Snapshot.Helper.UpdateStatusLabel(snapshotMenuActionLBL, "Done");
+                Helper.UpdateStatusLabel(SnapshotMenuCurrentStatusLBL, "Stopped");
             }
             catch (Exception ex) { Console.WriteLine(); MessageBox.Show(ex.Message); };
         }
@@ -386,6 +400,15 @@ namespace _9CHeadlessMonitoringAndLauncher
         private void snapshotMenuStatusTitle_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void MainFormLoad(object sender, EventArgs e)
+        {
+            if (File.Exists(Application.StartupPath + "/config/snapshotconfig.json"))
+            {
+                var json = JsonConvert.DeserializeObject<SnapshotModel>(File.ReadAllText(Application.StartupPath + "/config/snapshotconfig.json"));
+                snapshotConfigCurrentPathLBL.Text = json.snapshotPath;
+            }
         }
     }
 }

@@ -543,6 +543,7 @@
             this.Controls.Add(this.panelMenu);
             this.Name = "MainForm";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.MainFormLoad);
             this.panelMenu.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.IconPanel.ResumeLayout(false);
