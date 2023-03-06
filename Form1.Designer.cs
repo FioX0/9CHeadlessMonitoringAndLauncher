@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panelMenu = new System.Windows.Forms.Panel();
+            this.iconButton1 = new FontAwesome.Sharp.IconButton();
             this.iconButton8 = new FontAwesome.Sharp.IconButton();
             this.iconButton6 = new FontAwesome.Sharp.IconButton();
             this.iconButton5 = new FontAwesome.Sharp.IconButton();
@@ -37,7 +40,6 @@
             this.iconButton2 = new FontAwesome.Sharp.IconButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.IconPanel = new System.Windows.Forms.Panel();
-            this.btnMenu = new FontAwesome.Sharp.IconButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panelTitleBar = new System.Windows.Forms.Panel();
             this.iconButton9 = new FontAwesome.Sharp.IconButton();
@@ -65,6 +67,33 @@
             this.SnapshotStartWorker = new System.ComponentModel.BackgroundWorker();
             this.SnapshotDownloadWrkr = new System.ComponentModel.BackgroundWorker();
             this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
+            this.mainMenuPanel = new System.Windows.Forms.Panel();
+            this.mainMenuRunningLBL = new System.Windows.Forms.Label();
+            this.mainMenuNodeRunningTLT = new System.Windows.Forms.Label();
+            this.mainMenuDifferenceLBL = new System.Windows.Forms.Label();
+            this.mainMenuDifferenceTLT = new System.Windows.Forms.Label();
+            this.mainMenuNodeBlockLBL = new System.Windows.Forms.Label();
+            this.mainMenuNodeBlockTLT = new System.Windows.Forms.Label();
+            this.mainMenuChainBlockLBL = new System.Windows.Forms.Label();
+            this.mainMenuChainBlockTLT = new System.Windows.Forms.Label();
+            this.mainMenuPreloadTLT = new System.Windows.Forms.Label();
+            this.mainMenuPreloadLBL = new System.Windows.Forms.Label();
+            this.menuNodeInfo = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.homeTLT = new System.Windows.Forms.Label();
+            this.APVWorker = new System.ComponentModel.BackgroundWorker();
+            this.nodeConfigPanel = new System.Windows.Forms.Panel();
+            this.nodeConfigIPTBOX = new System.Windows.Forms.TextBox();
+            this.nodeConfigIPTLT = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.nodeConfigCurrentPathLBL = new System.Windows.Forms.Label();
+            this.nodeConfigCurrentPathTLT = new System.Windows.Forms.Label();
+            this.nodeConfigPathTLT = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.nodeConfigMenuTLT = new System.Windows.Forms.Label();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.NodeMonitoring = new System.ComponentModel.BackgroundWorker();
             this.panelMenu.SuspendLayout();
             this.panel1.SuspendLayout();
             this.IconPanel.SuspendLayout();
@@ -74,11 +103,16 @@
             this.panel2.SuspendLayout();
             this.snapshotConfigPanel2.SuspendLayout();
             this.snapshotConfigTitlePanel.SuspendLayout();
+            this.mainMenuPanel.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.nodeConfigPanel.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelMenu
             // 
             this.panelMenu.BackColor = System.Drawing.Color.RoyalBlue;
+            this.panelMenu.Controls.Add(this.iconButton1);
             this.panelMenu.Controls.Add(this.iconButton8);
             this.panelMenu.Controls.Add(this.iconButton6);
             this.panelMenu.Controls.Add(this.iconButton5);
@@ -89,8 +123,31 @@
             this.panelMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelMenu.Location = new System.Drawing.Point(0, 0);
             this.panelMenu.Name = "panelMenu";
-            this.panelMenu.Size = new System.Drawing.Size(190, 397);
+            this.panelMenu.Size = new System.Drawing.Size(190, 418);
             this.panelMenu.TabIndex = 0;
+            // 
+            // iconButton1
+            // 
+            this.iconButton1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.iconButton1.FlatAppearance.BorderSize = 0;
+            this.iconButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.iconButton1.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.iconButton1.ForeColor = System.Drawing.SystemColors.Control;
+            this.iconButton1.IconChar = FontAwesome.Sharp.IconChar.SortDesc;
+            this.iconButton1.IconColor = System.Drawing.Color.White;
+            this.iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.iconButton1.IconSize = 30;
+            this.iconButton1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.iconButton1.Location = new System.Drawing.Point(0, 320);
+            this.iconButton1.Name = "iconButton1";
+            this.iconButton1.Padding = new System.Windows.Forms.Padding(10, 0, 0, 10);
+            this.iconButton1.Size = new System.Drawing.Size(190, 49);
+            this.iconButton1.TabIndex = 8;
+            this.iconButton1.Tag = "Minimize";
+            this.iconButton1.Text = "iconButton1";
+            this.iconButton1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.iconButton1.UseVisualStyleBackColor = true;
+            this.iconButton1.Click += new System.EventHandler(this.MinimizeClick);
             // 
             // iconButton8
             // 
@@ -104,7 +161,7 @@
             this.iconButton8.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.iconButton8.IconSize = 30;
             this.iconButton8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.iconButton8.Location = new System.Drawing.Point(0, 348);
+            this.iconButton8.Location = new System.Drawing.Point(0, 369);
             this.iconButton8.Name = "iconButton8";
             this.iconButton8.Padding = new System.Windows.Forms.Padding(10, 0, 0, 10);
             this.iconButton8.Size = new System.Drawing.Size(190, 49);
@@ -178,10 +235,11 @@
             this.iconButton4.Padding = new System.Windows.Forms.Padding(10, 10, 0, 0);
             this.iconButton4.Size = new System.Drawing.Size(190, 49);
             this.iconButton4.TabIndex = 3;
-            this.iconButton4.Tag = "Node Restart";
+            this.iconButton4.Tag = "Node Config";
             this.iconButton4.Text = "iconButton4";
             this.iconButton4.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.iconButton4.UseVisualStyleBackColor = true;
+            this.iconButton4.Click += new System.EventHandler(this.LoadNodeSetup);
             // 
             // iconButton3
             // 
@@ -200,10 +258,11 @@
             this.iconButton3.Padding = new System.Windows.Forms.Padding(10, 10, 0, 0);
             this.iconButton3.Size = new System.Drawing.Size(190, 49);
             this.iconButton3.TabIndex = 2;
-            this.iconButton3.Tag = "Node Setup";
+            this.iconButton3.Tag = "Node";
             this.iconButton3.Text = "iconButton3";
             this.iconButton3.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.iconButton3.UseVisualStyleBackColor = true;
+            this.iconButton3.Click += new System.EventHandler(this.iconButton3_Click);
             // 
             // iconButton2
             // 
@@ -226,6 +285,7 @@
             this.iconButton2.Text = "iconButton2";
             this.iconButton2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.iconButton2.UseVisualStyleBackColor = true;
+            this.iconButton2.Click += new System.EventHandler(this.LoadMainMenu);
             // 
             // panel1
             // 
@@ -238,38 +298,24 @@
             // 
             // IconPanel
             // 
-            this.IconPanel.Controls.Add(this.btnMenu);
             this.IconPanel.Controls.Add(this.pictureBox1);
             this.IconPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.IconPanel.Location = new System.Drawing.Point(0, 0);
             this.IconPanel.Name = "IconPanel";
             this.IconPanel.Size = new System.Drawing.Size(190, 85);
             this.IconPanel.TabIndex = 1;
-            // 
-            // btnMenu
-            // 
-            this.btnMenu.FlatAppearance.BorderSize = 0;
-            this.btnMenu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMenu.IconChar = FontAwesome.Sharp.IconChar.Bars;
-            this.btnMenu.IconColor = System.Drawing.Color.White;
-            this.btnMenu.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnMenu.IconSize = 30;
-            this.btnMenu.Location = new System.Drawing.Point(115, 3);
-            this.btnMenu.Name = "btnMenu";
-            this.btnMenu.Size = new System.Drawing.Size(72, 44);
-            this.btnMenu.TabIndex = 1;
-            this.btnMenu.UseVisualStyleBackColor = true;
-            this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
+            this.IconPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.IconPanel_MouseDown);
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::_9CHeadlessMonitoringAndLauncher.Properties.Resources.Asset_1;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(27, 3);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(112, 79);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
             // 
             // panelTitleBar
             // 
@@ -326,8 +372,7 @@
             this.snapshotPanel.Controls.Add(this.snapshotMenuStatusTitle);
             this.snapshotPanel.Controls.Add(this.snapshotMenuStartBTN);
             this.snapshotPanel.Controls.Add(this.panel2);
-            this.snapshotPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.snapshotPanel.Location = new System.Drawing.Point(190, 44);
+            this.snapshotPanel.Location = new System.Drawing.Point(535, 177);
             this.snapshotPanel.Name = "snapshotPanel";
             this.snapshotPanel.Size = new System.Drawing.Size(457, 353);
             this.snapshotPanel.TabIndex = 2;
@@ -337,7 +382,7 @@
             // 
             this.snapshotMenuActionProgressTLT.AutoSize = true;
             this.snapshotMenuActionProgressTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuActionProgressTLT.Location = new System.Drawing.Point(167, 223);
+            this.snapshotMenuActionProgressTLT.Location = new System.Drawing.Point(185, 205);
             this.snapshotMenuActionProgressTLT.Name = "snapshotMenuActionProgressTLT";
             this.snapshotMenuActionProgressTLT.Size = new System.Drawing.Size(105, 14);
             this.snapshotMenuActionProgressTLT.TabIndex = 10;
@@ -345,7 +390,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(157, 252);
+            this.progressBar1.Location = new System.Drawing.Point(169, 234);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(133, 23);
             this.progressBar1.TabIndex = 9;
@@ -354,7 +399,7 @@
             // 
             this.snapshotMenuActionLBL.AutoSize = true;
             this.snapshotMenuActionLBL.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuActionLBL.Location = new System.Drawing.Point(205, 188);
+            this.snapshotMenuActionLBL.Location = new System.Drawing.Point(241, 136);
             this.snapshotMenuActionLBL.Name = "snapshotMenuActionLBL";
             this.snapshotMenuActionLBL.Size = new System.Drawing.Size(40, 14);
             this.snapshotMenuActionLBL.TabIndex = 8;
@@ -364,7 +409,7 @@
             // 
             this.snapshotMenuActionTLT.AutoSize = true;
             this.snapshotMenuActionTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuActionTLT.Location = new System.Drawing.Point(160, 188);
+            this.snapshotMenuActionTLT.Location = new System.Drawing.Point(189, 136);
             this.snapshotMenuActionTLT.Name = "snapshotMenuActionTLT";
             this.snapshotMenuActionTLT.Size = new System.Drawing.Size(50, 14);
             this.snapshotMenuActionTLT.TabIndex = 7;
@@ -374,7 +419,7 @@
             // 
             this.snapshotMenuFileLBL.AutoSize = true;
             this.snapshotMenuFileLBL.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuFileLBL.Location = new System.Drawing.Point(187, 156);
+            this.snapshotMenuFileLBL.Location = new System.Drawing.Point(241, 166);
             this.snapshotMenuFileLBL.Name = "snapshotMenuFileLBL";
             this.snapshotMenuFileLBL.Size = new System.Drawing.Size(40, 14);
             this.snapshotMenuFileLBL.TabIndex = 6;
@@ -384,7 +429,7 @@
             // 
             this.snapshotMenuFileTLT.AutoSize = true;
             this.snapshotMenuFileTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuFileTLT.Location = new System.Drawing.Point(160, 156);
+            this.snapshotMenuFileTLT.Location = new System.Drawing.Point(205, 166);
             this.snapshotMenuFileTLT.Name = "snapshotMenuFileTLT";
             this.snapshotMenuFileTLT.Size = new System.Drawing.Size(33, 14);
             this.snapshotMenuFileTLT.TabIndex = 5;
@@ -394,7 +439,7 @@
             // 
             this.currentStatusTLT.AutoSize = true;
             this.currentStatusTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.currentStatusTLT.Location = new System.Drawing.Point(157, 125);
+            this.currentStatusTLT.Location = new System.Drawing.Point(139, 104);
             this.currentStatusTLT.Name = "currentStatusTLT";
             this.currentStatusTLT.Size = new System.Drawing.Size(105, 14);
             this.currentStatusTLT.TabIndex = 4;
@@ -404,7 +449,7 @@
             // 
             this.SnapshotMenuCurrentStatusLBL.AutoSize = true;
             this.SnapshotMenuCurrentStatusLBL.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.SnapshotMenuCurrentStatusLBL.Location = new System.Drawing.Point(259, 125);
+            this.SnapshotMenuCurrentStatusLBL.Location = new System.Drawing.Point(250, 104);
             this.SnapshotMenuCurrentStatusLBL.Name = "SnapshotMenuCurrentStatusLBL";
             this.SnapshotMenuCurrentStatusLBL.Size = new System.Drawing.Size(31, 14);
             this.SnapshotMenuCurrentStatusLBL.TabIndex = 3;
@@ -414,16 +459,15 @@
             // 
             this.snapshotMenuStatusTitle.AutoSize = true;
             this.snapshotMenuStatusTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.snapshotMenuStatusTitle.Location = new System.Drawing.Point(148, 90);
+            this.snapshotMenuStatusTitle.Location = new System.Drawing.Point(150, 72);
             this.snapshotMenuStatusTitle.Name = "snapshotMenuStatusTitle";
             this.snapshotMenuStatusTitle.Size = new System.Drawing.Size(151, 18);
             this.snapshotMenuStatusTitle.TabIndex = 2;
             this.snapshotMenuStatusTitle.Text = "Snapshot Status";
-            this.snapshotMenuStatusTitle.Click += new System.EventHandler(this.snapshotMenuStatusTitle_Click);
             // 
             // snapshotMenuStartBTN
             // 
-            this.snapshotMenuStartBTN.Location = new System.Drawing.Point(187, 281);
+            this.snapshotMenuStartBTN.Location = new System.Drawing.Point(200, 270);
             this.snapshotMenuStartBTN.Name = "snapshotMenuStartBTN";
             this.snapshotMenuStartBTN.Size = new System.Drawing.Size(75, 23);
             this.snapshotMenuStartBTN.TabIndex = 1;
@@ -458,7 +502,7 @@
             this.snapshotConfigPanel2.Controls.Add(this.snapshotConfigCurrentPathTLT);
             this.snapshotConfigPanel2.Controls.Add(this.snapshotConfigInnerTLT);
             this.snapshotConfigPanel2.Controls.Add(this.snapshotConfigTitlePanel);
-            this.snapshotConfigPanel2.Location = new System.Drawing.Point(625, 54);
+            this.snapshotConfigPanel2.Location = new System.Drawing.Point(593, 66);
             this.snapshotConfigPanel2.Name = "snapshotConfigPanel2";
             this.snapshotConfigPanel2.Size = new System.Drawing.Size(562, 375);
             this.snapshotConfigPanel2.TabIndex = 3;
@@ -518,7 +562,7 @@
             // 
             this.snapshotConfigTitleLBL.AutoSize = true;
             this.snapshotConfigTitleLBL.Font = new System.Drawing.Font("Verdana", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.snapshotConfigTitleLBL.Location = new System.Drawing.Point(188, 16);
+            this.snapshotConfigTitleLBL.Location = new System.Drawing.Point(135, 16);
             this.snapshotConfigTitleLBL.Name = "snapshotConfigTitleLBL";
             this.snapshotConfigTitleLBL.Size = new System.Drawing.Size(194, 25);
             this.snapshotConfigTitleLBL.TabIndex = 0;
@@ -532,11 +576,282 @@
             // 
             this.SnapshotDownloadWrkr.DoWork += new System.ComponentModel.DoWorkEventHandler(this.SnapshotDownloadWorker);
             // 
+            // mainMenuPanel
+            // 
+            this.mainMenuPanel.BackColor = System.Drawing.Color.White;
+            this.mainMenuPanel.Controls.Add(this.mainMenuRunningLBL);
+            this.mainMenuPanel.Controls.Add(this.mainMenuNodeRunningTLT);
+            this.mainMenuPanel.Controls.Add(this.mainMenuDifferenceLBL);
+            this.mainMenuPanel.Controls.Add(this.mainMenuDifferenceTLT);
+            this.mainMenuPanel.Controls.Add(this.mainMenuNodeBlockLBL);
+            this.mainMenuPanel.Controls.Add(this.mainMenuNodeBlockTLT);
+            this.mainMenuPanel.Controls.Add(this.mainMenuChainBlockLBL);
+            this.mainMenuPanel.Controls.Add(this.mainMenuChainBlockTLT);
+            this.mainMenuPanel.Controls.Add(this.mainMenuPreloadTLT);
+            this.mainMenuPanel.Controls.Add(this.mainMenuPreloadLBL);
+            this.mainMenuPanel.Controls.Add(this.menuNodeInfo);
+            this.mainMenuPanel.Controls.Add(this.panel4);
+            this.mainMenuPanel.Location = new System.Drawing.Point(210, 65);
+            this.mainMenuPanel.Name = "mainMenuPanel";
+            this.mainMenuPanel.Size = new System.Drawing.Size(457, 353);
+            this.mainMenuPanel.TabIndex = 4;
+            this.mainMenuPanel.Visible = false;
+            // 
+            // mainMenuRunningLBL
+            // 
+            this.mainMenuRunningLBL.AutoSize = true;
+            this.mainMenuRunningLBL.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuRunningLBL.Location = new System.Drawing.Point(220, 126);
+            this.mainMenuRunningLBL.Name = "mainMenuRunningLBL";
+            this.mainMenuRunningLBL.Size = new System.Drawing.Size(27, 17);
+            this.mainMenuRunningLBL.TabIndex = 12;
+            this.mainMenuRunningLBL.Text = "No";
+            // 
+            // mainMenuNodeRunningTLT
+            // 
+            this.mainMenuNodeRunningTLT.AutoSize = true;
+            this.mainMenuNodeRunningTLT.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuNodeRunningTLT.Location = new System.Drawing.Point(135, 125);
+            this.mainMenuNodeRunningTLT.Name = "mainMenuNodeRunningTLT";
+            this.mainMenuNodeRunningTLT.Size = new System.Drawing.Size(81, 18);
+            this.mainMenuNodeRunningTLT.TabIndex = 11;
+            this.mainMenuNodeRunningTLT.Text = "Running:";
+            // 
+            // mainMenuDifferenceLBL
+            // 
+            this.mainMenuDifferenceLBL.AutoSize = true;
+            this.mainMenuDifferenceLBL.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuDifferenceLBL.Location = new System.Drawing.Point(220, 245);
+            this.mainMenuDifferenceLBL.Name = "mainMenuDifferenceLBL";
+            this.mainMenuDifferenceLBL.Size = new System.Drawing.Size(17, 17);
+            this.mainMenuDifferenceLBL.TabIndex = 10;
+            this.mainMenuDifferenceLBL.Text = "0";
+            // 
+            // mainMenuDifferenceTLT
+            // 
+            this.mainMenuDifferenceTLT.AutoSize = true;
+            this.mainMenuDifferenceTLT.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuDifferenceTLT.Location = new System.Drawing.Point(118, 245);
+            this.mainMenuDifferenceTLT.Name = "mainMenuDifferenceTLT";
+            this.mainMenuDifferenceTLT.Size = new System.Drawing.Size(98, 18);
+            this.mainMenuDifferenceTLT.TabIndex = 9;
+            this.mainMenuDifferenceTLT.Text = "Difference:";
+            // 
+            // mainMenuNodeBlockLBL
+            // 
+            this.mainMenuNodeBlockLBL.AutoSize = true;
+            this.mainMenuNodeBlockLBL.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuNodeBlockLBL.Location = new System.Drawing.Point(220, 185);
+            this.mainMenuNodeBlockLBL.Name = "mainMenuNodeBlockLBL";
+            this.mainMenuNodeBlockLBL.Size = new System.Drawing.Size(17, 17);
+            this.mainMenuNodeBlockLBL.TabIndex = 8;
+            this.mainMenuNodeBlockLBL.Text = "0";
+            // 
+            // mainMenuNodeBlockTLT
+            // 
+            this.mainMenuNodeBlockTLT.AutoSize = true;
+            this.mainMenuNodeBlockTLT.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuNodeBlockTLT.Location = new System.Drawing.Point(110, 185);
+            this.mainMenuNodeBlockTLT.Name = "mainMenuNodeBlockTLT";
+            this.mainMenuNodeBlockTLT.Size = new System.Drawing.Size(106, 18);
+            this.mainMenuNodeBlockTLT.TabIndex = 7;
+            this.mainMenuNodeBlockTLT.Text = "Node Block:";
+            // 
+            // mainMenuChainBlockLBL
+            // 
+            this.mainMenuChainBlockLBL.AutoSize = true;
+            this.mainMenuChainBlockLBL.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuChainBlockLBL.Location = new System.Drawing.Point(220, 215);
+            this.mainMenuChainBlockLBL.Name = "mainMenuChainBlockLBL";
+            this.mainMenuChainBlockLBL.Size = new System.Drawing.Size(17, 17);
+            this.mainMenuChainBlockLBL.TabIndex = 6;
+            this.mainMenuChainBlockLBL.Text = "0";
+            // 
+            // mainMenuChainBlockTLT
+            // 
+            this.mainMenuChainBlockTLT.AutoSize = true;
+            this.mainMenuChainBlockTLT.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuChainBlockTLT.Location = new System.Drawing.Point(156, 215);
+            this.mainMenuChainBlockTLT.Name = "mainMenuChainBlockTLT";
+            this.mainMenuChainBlockTLT.Size = new System.Drawing.Size(60, 18);
+            this.mainMenuChainBlockTLT.TabIndex = 5;
+            this.mainMenuChainBlockTLT.Text = "Peers:";
+            // 
+            // mainMenuPreloadTLT
+            // 
+            this.mainMenuPreloadTLT.AutoSize = true;
+            this.mainMenuPreloadTLT.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuPreloadTLT.Location = new System.Drawing.Point(115, 155);
+            this.mainMenuPreloadTLT.Name = "mainMenuPreloadTLT";
+            this.mainMenuPreloadTLT.Size = new System.Drawing.Size(101, 18);
+            this.mainMenuPreloadTLT.TabIndex = 4;
+            this.mainMenuPreloadTLT.Text = "Preloading:";
+            // 
+            // mainMenuPreloadLBL
+            // 
+            this.mainMenuPreloadLBL.AutoSize = true;
+            this.mainMenuPreloadLBL.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.mainMenuPreloadLBL.Location = new System.Drawing.Point(220, 157);
+            this.mainMenuPreloadLBL.Name = "mainMenuPreloadLBL";
+            this.mainMenuPreloadLBL.Size = new System.Drawing.Size(73, 17);
+            this.mainMenuPreloadLBL.TabIndex = 3;
+            this.mainMenuPreloadLBL.Text = "Unknown";
+            // 
+            // menuNodeInfo
+            // 
+            this.menuNodeInfo.AutoSize = true;
+            this.menuNodeInfo.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.menuNodeInfo.Location = new System.Drawing.Point(160, 72);
+            this.menuNodeInfo.Name = "menuNodeInfo";
+            this.menuNodeInfo.Size = new System.Drawing.Size(96, 18);
+            this.menuNodeInfo.TabIndex = 2;
+            this.menuNodeInfo.Text = "Node Info";
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.homeTLT);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(457, 56);
+            this.panel4.TabIndex = 0;
+            // 
+            // homeTLT
+            // 
+            this.homeTLT.AutoSize = true;
+            this.homeTLT.Font = new System.Drawing.Font("Verdana", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.homeTLT.Location = new System.Drawing.Point(145, 16);
+            this.homeTLT.Name = "homeTLT";
+            this.homeTLT.Size = new System.Drawing.Size(132, 25);
+            this.homeTLT.TabIndex = 0;
+            this.homeTLT.Text = "Main Menu";
+            // 
+            // APVWorker
+            // 
+            this.APVWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.APVWorker_DoWork);
+            // 
+            // nodeConfigPanel
+            // 
+            this.nodeConfigPanel.BackColor = System.Drawing.Color.White;
+            this.nodeConfigPanel.Controls.Add(this.nodeConfigIPTBOX);
+            this.nodeConfigPanel.Controls.Add(this.nodeConfigIPTLT);
+            this.nodeConfigPanel.Controls.Add(this.label2);
+            this.nodeConfigPanel.Controls.Add(this.button1);
+            this.nodeConfigPanel.Controls.Add(this.nodeConfigCurrentPathLBL);
+            this.nodeConfigPanel.Controls.Add(this.nodeConfigCurrentPathTLT);
+            this.nodeConfigPanel.Controls.Add(this.nodeConfigPathTLT);
+            this.nodeConfigPanel.Controls.Add(this.panel5);
+            this.nodeConfigPanel.Location = new System.Drawing.Point(417, 331);
+            this.nodeConfigPanel.Name = "nodeConfigPanel";
+            this.nodeConfigPanel.Size = new System.Drawing.Size(562, 375);
+            this.nodeConfigPanel.TabIndex = 5;
+            this.nodeConfigPanel.Visible = false;
+            // 
+            // nodeConfigIPTBOX
+            // 
+            this.nodeConfigIPTBOX.Location = new System.Drawing.Point(163, 258);
+            this.nodeConfigIPTBOX.Name = "nodeConfigIPTBOX";
+            this.nodeConfigIPTBOX.Size = new System.Drawing.Size(107, 23);
+            this.nodeConfigIPTBOX.TabIndex = 7;
+            this.nodeConfigIPTBOX.Validated += new System.EventHandler(this.NodeIPValidated);
+            // 
+            // nodeConfigIPTLT
+            // 
+            this.nodeConfigIPTLT.AutoSize = true;
+            this.nodeConfigIPTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.nodeConfigIPTLT.Location = new System.Drawing.Point(80, 261);
+            this.nodeConfigIPTLT.Name = "nodeConfigIPTLT";
+            this.nodeConfigIPTLT.Size = new System.Drawing.Size(77, 14);
+            this.nodeConfigIPTLT.TabIndex = 6;
+            this.nodeConfigIPTLT.Text = "Current IP:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label2.Location = new System.Drawing.Point(80, 225);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(112, 18);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Headless IP";
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button1.Location = new System.Drawing.Point(80, 153);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Change";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.NodePathClick);
+            // 
+            // nodeConfigCurrentPathLBL
+            // 
+            this.nodeConfigCurrentPathLBL.AutoSize = true;
+            this.nodeConfigCurrentPathLBL.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.nodeConfigCurrentPathLBL.Location = new System.Drawing.Point(176, 125);
+            this.nodeConfigCurrentPathLBL.Name = "nodeConfigCurrentPathLBL";
+            this.nodeConfigCurrentPathLBL.Size = new System.Drawing.Size(40, 14);
+            this.nodeConfigCurrentPathLBL.TabIndex = 3;
+            this.nodeConfigCurrentPathLBL.Text = "None";
+            // 
+            // nodeConfigCurrentPathTLT
+            // 
+            this.nodeConfigCurrentPathTLT.AutoSize = true;
+            this.nodeConfigCurrentPathTLT.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.nodeConfigCurrentPathTLT.Location = new System.Drawing.Point(80, 125);
+            this.nodeConfigCurrentPathTLT.Name = "nodeConfigCurrentPathTLT";
+            this.nodeConfigCurrentPathTLT.Size = new System.Drawing.Size(93, 14);
+            this.nodeConfigCurrentPathTLT.TabIndex = 2;
+            this.nodeConfigCurrentPathTLT.Text = "Current Path:";
+            // 
+            // nodeConfigPathTLT
+            // 
+            this.nodeConfigPathTLT.AutoSize = true;
+            this.nodeConfigPathTLT.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.nodeConfigPathTLT.Location = new System.Drawing.Point(80, 90);
+            this.nodeConfigPathTLT.Name = "nodeConfigPathTLT";
+            this.nodeConfigPathTLT.Size = new System.Drawing.Size(133, 18);
+            this.nodeConfigPathTLT.TabIndex = 1;
+            this.nodeConfigPathTLT.Text = "Headless Path";
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.nodeConfigMenuTLT);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(562, 59);
+            this.panel5.TabIndex = 0;
+            // 
+            // nodeConfigMenuTLT
+            // 
+            this.nodeConfigMenuTLT.AutoSize = true;
+            this.nodeConfigMenuTLT.Font = new System.Drawing.Font("Verdana", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.nodeConfigMenuTLT.Location = new System.Drawing.Point(135, 16);
+            this.nodeConfigMenuTLT.Name = "nodeConfigMenuTLT";
+            this.nodeConfigMenuTLT.Size = new System.Drawing.Size(148, 25);
+            this.nodeConfigMenuTLT.TabIndex = 0;
+            this.nodeConfigMenuTLT.Text = "Node Config";
+            // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "9CNode";
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            // 
+            // NodeMonitoring
+            // 
+            this.NodeMonitoring.DoWork += new System.ComponentModel.DoWorkEventHandler(this.NodeMonitoring_DoWork);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(647, 397);
+            this.ClientSize = new System.Drawing.Size(647, 418);
+            this.Controls.Add(this.nodeConfigPanel);
+            this.Controls.Add(this.mainMenuPanel);
             this.Controls.Add(this.snapshotConfigPanel2);
             this.Controls.Add(this.snapshotPanel);
             this.Controls.Add(this.panelTitleBar);
@@ -558,6 +873,14 @@
             this.snapshotConfigPanel2.PerformLayout();
             this.snapshotConfigTitlePanel.ResumeLayout(false);
             this.snapshotConfigTitlePanel.PerformLayout();
+            this.mainMenuPanel.ResumeLayout(false);
+            this.mainMenuPanel.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            this.nodeConfigPanel.ResumeLayout(false);
+            this.nodeConfigPanel.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -570,7 +893,6 @@
         private FolderBrowserDialog folderBrowserDialog1;
         private FontAwesome.Sharp.IconButton iconButton2;
         private Panel panel1;
-        private FontAwesome.Sharp.IconButton btnMenu;
         private PictureBox pictureBox1;
         private FontAwesome.Sharp.IconButton iconButton8;
         private FontAwesome.Sharp.IconButton iconButton6;
@@ -610,5 +932,33 @@
         private Label snapshotConfigCurrentPathLBL;
         private Label snapshotConfigCurrentPathTLT;
         private FolderBrowserDialog folderBrowserDialog2;
+        private Panel mainMenuPanel;
+        private Label mainMenuNodeBlockLBL;
+        private Label mainMenuNodeBlockTLT;
+        private Label mainMenuChainBlockLBL;
+        private Label mainMenuChainBlockTLT;
+        private Label mainMenuPreloadTLT;
+        private Label mainMenuPreloadLBL;
+        private Label menuNodeInfo;
+        private Panel panel4;
+        private Label homeTLT;
+        private System.ComponentModel.BackgroundWorker APVWorker;
+        private Label mainMenuDifferenceLBL;
+        private Label mainMenuDifferenceTLT;
+        private Label mainMenuRunningLBL;
+        private Label mainMenuNodeRunningTLT;
+        private Panel nodeConfigPanel;
+        private Button button1;
+        private Label nodeConfigCurrentPathLBL;
+        private Label nodeConfigCurrentPathTLT;
+        private Label nodeConfigPathTLT;
+        private Panel panel5;
+        private Label nodeConfigMenuTLT;
+        private TextBox nodeConfigIPTBOX;
+        private Label nodeConfigIPTLT;
+        private Label label2;
+        private FontAwesome.Sharp.IconButton iconButton1;
+        private NotifyIcon notifyIcon;
+        private System.ComponentModel.BackgroundWorker NodeMonitoring;
     }
 }

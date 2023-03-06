@@ -1,8 +1,12 @@
 using _9CHeadlessMonitoringAndLauncher.Models;
 using _9CHeadlessMonitoringAndLauncher.Snapshot;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
+using GraphQL;
 using Microsoft.VisualBasic.Devices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RestSharp;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
@@ -10,9 +14,14 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 using System.Windows.Input;
 using static System.Net.Mime.MediaTypeNames;
 using Application = System.Windows.Forms.Application;
+using System.Text.Json.Nodes;
+using System.Diagnostics;
+using System.Text.Json.Serialization;
+using System;
 
 namespace _9CHeadlessMonitoringAndLauncher
 {
@@ -20,7 +29,9 @@ namespace _9CHeadlessMonitoringAndLauncher
     {
         //Fields
         private int borderSize = 2;
+        public static int preload = 1;
         private Size formSize; //Keep form size when it is minimized and restored.Since the form is resized because it takes into account the size of the title bar and borders.
+        private APVModel aPVModel;
 
         #region  SnapshotVariables
         static List<string> folderlist1;
@@ -39,6 +50,7 @@ namespace _9CHeadlessMonitoringAndLauncher
             CollapseMenu();
             this.Padding = new Padding(borderSize);//Border size
             this.BackColor = Color.FromArgb(98, 102, 244);//Border color
+            aPVModel = APV.Helper.GetAPV().Result;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -46,18 +58,13 @@ namespace _9CHeadlessMonitoringAndLauncher
             formSize = this.ClientSize;
         }
 
+        #region SetupFormAndUIOverrides
         //Drag Form
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
         private extern static void ReleaseCapture();
 
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
-
-        private void panelTitleBar_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            ReleaseCapture();
-            SendMessage(this.Handle, 0x112, 0xf012, 0);
-        }
 
         //Overridden methods
         protected override void WndProc(ref Message m)
@@ -149,7 +156,6 @@ namespace _9CHeadlessMonitoringAndLauncher
             base.WndProc(ref m);
         }
 
-        //Private methods
         private void AdjustForm()
         {
             switch (this.WindowState)
@@ -170,7 +176,6 @@ namespace _9CHeadlessMonitoringAndLauncher
             {
                 panelMenu.Width = 100;
                 pictureBox1.Visible = false;
-                btnMenu.Dock = DockStyle.Top;
                 foreach (Button menuButton in panelMenu.Controls.OfType<Button>())
                 {
                     menuButton.Text = "";
@@ -182,7 +187,6 @@ namespace _9CHeadlessMonitoringAndLauncher
             { //Expand menu
                 panelMenu.Width = 180;
                 pictureBox1.Visible = true;
-                btnMenu.Dock = DockStyle.None;
                 foreach (Button menuButton in panelMenu.Controls.OfType<Button>())
                 {
                     menuButton.Text = "   " + menuButton.Tag.ToString();
@@ -192,7 +196,6 @@ namespace _9CHeadlessMonitoringAndLauncher
             }
         }
 
-        //Event methods
         private void Form1_Resize(object sender, EventArgs e)
         {
             AdjustForm();
@@ -227,9 +230,63 @@ namespace _9CHeadlessMonitoringAndLauncher
             }
         }
 
+        private void MinimizeClick(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+            Hide();
+            notifyIcon.Visible = true;
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon.Visible = false;
+        }
+
         private void btnClose_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void MainFormLoad(object sender, EventArgs e)
+        {
+            if (File.Exists(Application.StartupPath + "/config/snapshotconfig.json"))
+            {
+                var json = JsonConvert.DeserializeObject<SnapshotModel>(File.ReadAllText(Application.StartupPath + "/config/snapshotconfig.json"));
+                snapshotConfigCurrentPathLBL.Text = Snapshot.Helper.Truncate(json.snapshotPath, 30);
+            }
+
+            if (File.Exists(Application.StartupPath + "/config/nodeconfig.json"))
+            {
+                var oldModel = JsonConvert.DeserializeObject<NodeModel>(File.ReadAllText(Application.StartupPath + "/config/nodeconfig.json"));
+                if (oldModel.nodeIp != null)
+                    nodeConfigIPTBOX.Text = oldModel.nodeIp;
+                if(oldModel.nodePath != null)
+                    nodeConfigCurrentPathLBL.Text = Snapshot.Helper.Truncate(oldModel.nodePath, 30);
+            }
+            LoadMainMenu(sender, e);
+            APVWorker.RunWorkerAsync();
+            NodeMonitoring.RunWorkerAsync();
+        }
+
+        private void LoadMainMenu(object sender, EventArgs e)
+        {
+            snapshotConfigPanel2.Visible = false;
+            snapshotPanel.Visible = false;
+            nodeConfigPanel.Visible = false;
+            mainMenuPanel.Visible = true;
+            mainMenuPanel.Dock = DockStyle.Fill;
+        }
+
+        #endregion
+
+        #region AllowWindowToMove
+
+        private void panelTitleBar_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
 
         private void label1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -238,6 +295,21 @@ namespace _9CHeadlessMonitoringAndLauncher
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
 
+        private void IconPanel_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+
+        private void pictureBox1_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
+        }
+
+        #endregion
+
+        #region SnapshotStuff
         private void snapshotPathBTN_Click(object sender, EventArgs e)
         {
             DialogResult result = folderBrowserDialog2.ShowDialog();
@@ -313,7 +385,7 @@ namespace _9CHeadlessMonitoringAndLauncher
                 {
                     if (!folderlist1.Contains(chainpath1 + "\\done\\" + snapshoturl))
                     {
-                        Snapshot.Helper.UpdateStatusLabel(snapshotMenuFileLBL, "Epoch " + snapshoturl);
+                        Snapshot.Helper.UpdateStatusLabel(snapshotMenuFileLBL, snapshoturl);
                         download = 1;
 
                         if (!snapshoturl.Contains("latest"))
@@ -366,7 +438,7 @@ namespace _9CHeadlessMonitoringAndLauncher
                         {
                             var epoch = snapshotlist1[y - 2];
 
-                            Snapshot.Helper.UpdateStatusLabel(snapshotMenuFileLBL, "Epoch " + epoch);
+                            Snapshot.Helper.UpdateStatusLabel(snapshotMenuFileLBL, epoch);
                             ZipFile.ExtractToDirectory(chainpath1 + "\\temp\\snapshot-" + epoch + "-" + epoch + ".zip", chainpath1 + "\\9c-main-partition\\", Encoding.UTF8, true);
                             File.Delete(chainpath1 + "\\temp\\snapshot-" + epoch + "-" + epoch + ".zip");
                             File.WriteAllText(chainpath1 + "\\done\\" + epoch, "done");
@@ -386,6 +458,8 @@ namespace _9CHeadlessMonitoringAndLauncher
         private async void LoadSnapshotMenu(object sender, EventArgs e)
         {
             snapshotConfigPanel2.Visible = false;
+            mainMenuPanel.Visible = false;
+            nodeConfigPanel.Visible = false;
             snapshotPanel.Visible = true;
             snapshotPanel.Dock = DockStyle.Fill;
         }
@@ -393,22 +467,259 @@ namespace _9CHeadlessMonitoringAndLauncher
         private async void LoadSnapshotConfigMenu(object sender, EventArgs e)
         {
             snapshotPanel.Visible = false;
+            mainMenuPanel.Visible = false;
+            nodeConfigPanel.Visible = false;
             snapshotConfigPanel2.Visible = true;
             snapshotConfigPanel2.Dock = DockStyle.Fill;
         }
+        #endregion
 
-        private void snapshotMenuStatusTitle_Click(object sender, EventArgs e)
+        #region NodeSetup
+        private void LoadNodeSetup(object sender, EventArgs e)
         {
-
+            snapshotConfigPanel2.Visible = false;
+            snapshotPanel.Visible = false;
+            mainMenuPanel.Visible = false;
+            nodeConfigPanel.Visible = true;
+            nodeConfigPanel.Dock = DockStyle.Fill;
         }
 
-        private void MainFormLoad(object sender, EventArgs e)
+        private void NodePathClick(object sender, EventArgs e)
         {
+            NodeModel oldModel = new NodeModel();
+            NodeModel nodeModel = new NodeModel();
+
+            DialogResult result = folderBrowserDialog2.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                nodeModel.nodePath = folderBrowserDialog2.SelectedPath;
+                nodeConfigCurrentPathLBL.Text = Snapshot.Helper.Truncate(folderBrowserDialog2.SelectedPath,30);
+            }
+
+            if (File.Exists(Application.StartupPath + "/config/nodeconfig.json"))
+            {
+                oldModel = JsonConvert.DeserializeObject<NodeModel>(File.ReadAllText(Application.StartupPath + "/config/nodeconfig.json"));
+                if(oldModel.nodeIp != null)
+                    nodeModel.nodeIp = oldModel.nodeIp;
+            }
+
+            
+            Directory.CreateDirectory(Application.StartupPath + "/config/");
+            using (StreamWriter file = File.CreateText(Application.StartupPath + "/config/nodeconfig.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, nodeModel);
+            }
+        }
+
+        private void NodeIPValidated(object sender, EventArgs e)
+        {
+            NodeModel oldModel = new NodeModel();
+            NodeModel nodeModel = new NodeModel();
+
+            if (File.Exists(Application.StartupPath + "/config/nodeconfig.json"))
+            {
+                oldModel = JsonConvert.DeserializeObject<NodeModel>(File.ReadAllText(Application.StartupPath + "/config/nodeconfig.json"));
+                if (oldModel.nodePath != null)
+                    nodeModel.nodePath = oldModel.nodePath;
+            }
+
+            nodeModel.nodeIp = nodeConfigIPTBOX.Text;
+            Directory.CreateDirectory(Application.StartupPath + "/config/");
+            using (StreamWriter file = File.CreateText(Application.StartupPath + "/config/nodeconfig.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, nodeModel);
+            }
+        }
+
+        #endregion
+
+        #region Workers
+        private void APVWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                var aPVModelNEW = APV.Helper.GetAPV().Result;
+
+                if (aPVModelNEW.AppProtocolVersion != aPVModel.AppProtocolVersion)
+                {
+                    //Check CurrentRunning APV is the same as currently pulled.
+                }
+
+                Task.Delay(60000 * 15).Wait();
+            }
+        }
+        private void NodeMonitoring_DoWork(object sender, DoWorkEventArgs e)
+        {
+            new Thread(async () => { await Node.Monitoring.ChainNodeMonitor(mainMenuChainBlockLBL); }).Start();
+            new Thread(async () => { await DifferenceCalc(); }).Start();
+            new Thread(async () => { await Node.Monitoring.PreloadDone(this); }).Start();
+            new Thread(async () => { await NodeMonitorTaskWorker(); }).Start();
+           
+        }
+
+        public async Task<bool> NodeMonitorTaskWorker()
+        {
+
+            int update = 0;
+            while (true)
+            {
+                //check if Node is running
+                if (mainMenuRunningLBL.Text == "No")
+                {
+                    try
+                    {
+                        var client = new RestClient("http://localhost:23061/graphql");
+                        client.Timeout = -1;
+                        var request = new RestRequest(Method.POST);
+                        request.AddHeader("Content-Type", "application/json");
+                        request.AddParameter("application/json", "{\"query\":\"query{\\r\\nnodeStatus{topmostBlocks(limit: 1){index}}}\",\"variables\":{}}",
+                                   ParameterType.RequestBody);
+                        IRestResponse response = client.Execute(request);
+                        if (!response.IsSuccessful)
+                            await Task.Delay(1000);
+                        else
+                            Snapshot.Helper.UpdateStatusLabel(mainMenuRunningLBL, "Yes");
+                        preload = 1;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Node Check went very wrong");
+                    }
+                }
+                else
+                {
+                    if (mainMenuPreloadLBL.Text == "Unknown")
+                    {
+                        Snapshot.Helper.UpdateStatusLabel(mainMenuPreloadLBL, $"Yes - P:1/5 Checking Blocks");
+
+                        //Launch Subscriber.
+                        var graphQLClient = new GraphQLHttpClient("http://localhost:23061/graphql", new NewtonsoftJsonSerializer());
+
+                        var userJoinedRequest = new GraphQLRequest
+                        {
+                            Query = @"
+                            subscription {
+                              preloadProgress {
+                                currentPhase
+                                totalPhase
+                                extra {
+                                  type
+                                  currentCount
+                                  __typename
+                                  totalCount
+                                }
+                              }
+                            }"
+                        };
+
+                        IObservable<GraphQLResponse<UserJoinedSubscriptionResult>> subscriptionStream
+                            = graphQLClient.CreateSubscriptionStream<UserJoinedSubscriptionResult>(userJoinedRequest);
+
+                        var subscription = subscriptionStream.Subscribe(response =>
+                        {
+                            //Updating the label is asynchronous despite being on it's own thread so we need to limit the updates we do.
+                            update++;
+
+                            if (int.Parse((string)response.Data.preloadProgress.extra["totalCount"]) - int.Parse((string)response.Data.preloadProgress.extra["currentCount"]) < 50 && response.Data.preloadProgress.currentPhase == 5)
+                            {
+                                Snapshot.Helper.UpdateStatusLabel(mainMenuPreloadLBL, $"Yes - P:{response.Data.preloadProgress.currentPhase}/5 - C:{response.Data.preloadProgress.extra["currentCount"]}/{response.Data.preloadProgress.extra["totalCount"]}");
+                            }
+                            else if (update > 100 & response.Data.preloadProgress.currentPhase > 1 && response.Data.preloadProgress.currentPhase < 5)
+                            {
+                                Snapshot.Helper.UpdateStatusLabel(mainMenuPreloadLBL, $"Yes - P:{response.Data.preloadProgress.currentPhase}/5 - C:{response.Data.preloadProgress.extra["currentCount"]}/{response.Data.preloadProgress.extra["totalCount"]}");
+                                update = 0;
+                            }
+                            //This phase is very slow, we can reduce the limiter a bit.
+                            else if (update > 10 & response.Data.preloadProgress.currentPhase == 5)
+                            {
+                                Snapshot.Helper.UpdateStatusLabel(mainMenuPreloadLBL, $"Yes - P:{response.Data.preloadProgress.currentPhase}/5 - C:{response.Data.preloadProgress.extra["currentCount"]}/{response.Data.preloadProgress.extra["totalCount"]}");
+                                update = 0;
+                            }
+                        });
+                    }
+                    else if (preload == 1)
+                    {
+                        await Task.Delay(1000);
+                    }
+                    else
+                    {
+                        Snapshot.Helper.UpdateStatusLabel(mainMenuPreloadLBL, $"No");
+                        new Thread(async () => { await Node.Monitoring.LocalNodeMonitor(mainMenuNodeBlockLBL); }).Start();
+                        await Task.Delay(60000);
+                        return false;
+                    }
+                }
+                //Thread.Sleep(5000);
+            }
+        }
+
+        public async Task<bool> DifferenceCalc()
+        {
+            while(true)
+            {
+                int currentNode = int.Parse(mainMenuChainBlockLBL.Text);
+                int currentChain = int.Parse(mainMenuNodeBlockLBL.Text);
+
+                if(currentChain != 0 && currentNode != 0)
+                {
+                    string change = (currentNode - currentChain).ToString();
+                    Snapshot.Helper.UpdateStatusLabel(mainMenuDifferenceLBL, change);
+                }
+
+                await Task.Delay(11000);
+            }
+        }
+
+
+        public class UserJoinedSubscriptionResult
+        {
+            public PreloadProgress? preloadProgress { get; set; }
+
+            public class PreloadProgress
+            {
+                public int? currentPhase { get; set; }
+                public int? totalPhase { get; set; }
+                public JObject? extra { get; set; }
+                public int? currentCount { get; set; }
+                public int? totalCount { get; set;}
+            }
+        }
+        #endregion
+
+        private void iconButton3_Click(object sender, EventArgs e)
+        {
+
+            SnapshotModel snapshotModel = new SnapshotModel();
+            NodeModel nodeModel = new NodeModel();
+
             if (File.Exists(Application.StartupPath + "/config/snapshotconfig.json"))
             {
-                var json = JsonConvert.DeserializeObject<SnapshotModel>(File.ReadAllText(Application.StartupPath + "/config/snapshotconfig.json"));
-                snapshotConfigCurrentPathLBL.Text = json.snapshotPath;
+                snapshotModel = JsonConvert.DeserializeObject<SnapshotModel>(File.ReadAllText(Application.StartupPath + "/config/snapshotconfig.json"));
             }
+
+            if (File.Exists(Application.StartupPath + "/config/nodeconfig.json"))
+            {
+                nodeModel = JsonConvert.DeserializeObject<NodeModel>(File.ReadAllText(Application.StartupPath + "/config/nodeconfig.json"));
+            }
+
+            string snapshotPath = snapshotModel.snapshotPath;
+            string nodePath = nodeModel.nodePath;
+            string nodeIp = nodeModel.nodeIp;
+
+            //Initial plan was to call cmd directly and pass the params, however launching the cmd line nativaly like this will lock the node to the app.
+            //One we try to verify if the node is running by doing a GQL call, both node and app will indefinitely freeze as app sleeps waiting for a response form the Node.
+            //However as the node is connected to the app it will also freeze the node, thereby never getting a response.
+            //Workaround is to dump the params into a bat file.
+            using (StreamWriter file = File.CreateText(Application.StartupPath + "/runnode.bat"))
+            {
+                file.WriteLine("\"" + nodePath + "\\NineChronicles.Headless.Executable\" -V=" + aPVModel.AppProtocolVersion + " -G=https://release.nine-chronicles.com/genesis-block-9c-main  --store-type=rocksdb  --store-path=" + snapshotPath + "\\9c-main-partition -H=" + nodeIp + " --peer=027bd36895d68681290e570692ad3736750ceaab37be402442ffb203967f98f7b6,9c-main-tcp-seed-1.planetarium.dev,31234  --peer=02f164e3139e53eef2c17e52d99d343b8cbdb09eeed88af46c352b1c8be6329d71,9c-main-tcp-seed-2.planetarium.dev,31234  --peer=0247e289aa332260b99dfd50e578f779df9e6702d67e50848bb68f3e0737d9b9a5,9c-main-tcp-seed-3.planetarium.dev,31234  -T=" + aPVModel.TrustedAppProtocolVersionSigners[0] + "  --no-miner --graphql-server  --graphql-host=localhost  --graphql-port=23061  --confirmations=0  --minimum-broadcast-target=20  --bucket-size=20  --chain-tip-stale-behavior-type=reboot  --tip-timeout=180  --tx-life-time=60 --skip-preload=false");
+            }
+
+            Thread.Sleep(1000);
+
+            System.Diagnostics.Process.Start(Application.StartupPath + "/runnode.bat");
         }
     }
 }

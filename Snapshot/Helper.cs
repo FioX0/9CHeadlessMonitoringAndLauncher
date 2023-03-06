@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace _9CHeadlessMonitoringAndLauncher.Snapshot
 {
-    internal class Helper
+    public static class Helper
     {
         public static async Task<List<string>> SnapshotCallEndpoint()
         {
@@ -80,6 +80,11 @@ namespace _9CHeadlessMonitoringAndLauncher.Snapshot
         {
             Console.WriteLine(e.ProgressPercentage);
             UpdateProgressBar(MainForm.progressBarReference, e.ProgressPercentage);
+        }
+
+        public static string Truncate(this string value, int maxChars)
+        {
+            return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
         }
 
     }
