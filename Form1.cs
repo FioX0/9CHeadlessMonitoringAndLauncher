@@ -563,7 +563,8 @@ namespace _9CHeadlessMonitoringAndLauncher
         {
 
             int update = 0;
-            while (true)
+            int complete = 0;
+            while (complete == 0)
             {
                 //check if Node is running
                 if (mainMenuRunningLBL.Text == "No")
@@ -648,11 +649,13 @@ namespace _9CHeadlessMonitoringAndLauncher
                         Snapshot.Helper.UpdateStatusLabel(mainMenuPreloadLBL, $"No");
                         new Thread(async () => { await Node.Monitoring.LocalNodeMonitor(mainMenuNodeBlockLBL); }).Start();
                         await Task.Delay(60000);
+                        complete = 1;
                         return false;
                     }
                 }
-                //Thread.Sleep(5000);
+                await Task.Delay(2000);
             }
+            return true;
         }
 
         public async Task<bool> DifferenceCalc()
@@ -666,6 +669,16 @@ namespace _9CHeadlessMonitoringAndLauncher
                 {
                     string change = (currentNode - currentChain).ToString();
                     Snapshot.Helper.UpdateStatusLabel(mainMenuDifferenceLBL, change);
+
+                    if(int.Parse(change) > 50)
+                    {
+                        Process.Start("cmd", string.Format("/c \"taskkill /IM NineChronicles.Headless.Executable.exe /F"));
+                        Snapshot.Helper.UpdateStatusLabel(mainMenuRunningLBL, "No");
+                        Snapshot.Helper.UpdateStatusLabel(mainMenuPreloadLBL, "Unknown");
+                        preload = 1;
+                        new Thread(async () => { await Node.Monitoring.PreloadDone(this); }).Start();
+                        new Thread(async () => { await NodeMonitorTaskWorker(); }).Start();
+                    }
                 }
 
                 await Task.Delay(11000);
@@ -720,6 +733,8 @@ namespace _9CHeadlessMonitoringAndLauncher
             Thread.Sleep(1000);
 
             System.Diagnostics.Process.Start(Application.StartupPath + "/runnode.bat");
+
+            MessageBox.Show("Node has been started.");
         }
     }
 }

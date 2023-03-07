@@ -258,7 +258,7 @@
             this.iconButton3.Padding = new System.Windows.Forms.Padding(10, 10, 0, 0);
             this.iconButton3.Size = new System.Drawing.Size(190, 49);
             this.iconButton3.TabIndex = 2;
-            this.iconButton3.Tag = "Node";
+            this.iconButton3.Tag = "Start Node";
             this.iconButton3.Text = "iconButton3";
             this.iconButton3.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.iconButton3.UseVisualStyleBackColor = true;
@@ -671,11 +671,11 @@
             // 
             this.mainMenuChainBlockTLT.AutoSize = true;
             this.mainMenuChainBlockTLT.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.mainMenuChainBlockTLT.Location = new System.Drawing.Point(156, 215);
+            this.mainMenuChainBlockTLT.Location = new System.Drawing.Point(104, 215);
             this.mainMenuChainBlockTLT.Name = "mainMenuChainBlockTLT";
-            this.mainMenuChainBlockTLT.Size = new System.Drawing.Size(60, 18);
+            this.mainMenuChainBlockTLT.Size = new System.Drawing.Size(110, 18);
             this.mainMenuChainBlockTLT.TabIndex = 5;
-            this.mainMenuChainBlockTLT.Text = "Peers:";
+            this.mainMenuChainBlockTLT.Text = "Chain Block:";
             // 
             // mainMenuPreloadTLT
             // 
