@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static _9CHeadlessMonitoringAndLauncher.MainForm;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace _9CHeadlessMonitoringAndLauncher.Node
 {
@@ -41,9 +42,9 @@ namespace _9CHeadlessMonitoringAndLauncher.Node
             }
         }
 
-        public static async Task<bool> LocalNodeMonitor(Label mainMenuNodeBlockLBL)
+        public static async Task<bool> LocalNodeMonitor(Label mainMenuNodeBlockLBL, Label mainMenuRunningLBL)
         {
-            while (true)
+            while (mainMenuRunningLBL.Text == "Yes")
             {
                 try
                 {
@@ -66,10 +67,12 @@ namespace _9CHeadlessMonitoringAndLauncher.Node
                     Console.WriteLine(ex.ToString());
                 }
             }
+            return true;
         }
 
         public static async Task<bool> PreloadDone(Form form)
         {
+            Task.Delay(20000).Wait();
             while (true)
             {
                 try

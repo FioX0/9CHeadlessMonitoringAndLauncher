@@ -554,9 +554,9 @@ namespace _9CHeadlessMonitoringAndLauncher
         {
             new Thread(async () => { await Node.Monitoring.ChainNodeMonitor(mainMenuChainBlockLBL); }).Start();
             new Thread(async () => { await DifferenceCalc(); }).Start();
-            new Thread(async () => { await Node.Monitoring.PreloadDone(this); }).Start();
             new Thread(async () => { await NodeMonitorTaskWorker(); }).Start();
-           
+            new Thread(async () => { await Node.Monitoring.PreloadDone(this); }).Start();
+
         }
 
         public async Task<bool> NodeMonitorTaskWorker()
@@ -647,7 +647,7 @@ namespace _9CHeadlessMonitoringAndLauncher
                     else
                     {
                         Snapshot.Helper.UpdateStatusLabel(mainMenuPreloadLBL, $"No");
-                        new Thread(async () => { await Node.Monitoring.LocalNodeMonitor(mainMenuNodeBlockLBL); }).Start();
+                        new Thread(async () => { await Node.Monitoring.LocalNodeMonitor(mainMenuNodeBlockLBL, mainMenuRunningLBL); }).Start();
                         await Task.Delay(60000);
                         complete = 1;
                         return false;
@@ -662,22 +662,30 @@ namespace _9CHeadlessMonitoringAndLauncher
         {
             while(true)
             {
-                int currentNode = int.Parse(mainMenuChainBlockLBL.Text);
-                int currentChain = int.Parse(mainMenuNodeBlockLBL.Text);
+                int currentNode = int.Parse(mainMenuNodeBlockLBL.Text);
+                int currentChain = int.Parse(mainMenuChainBlockLBL.Text);
 
-                if(currentChain != 0 && currentNode != 0)
+                if(currentChain != 0 && currentNode != 0 && mainMenuPreloadLBL.Text == "No")
                 {
-                    string change = (currentNode - currentChain).ToString();
+                    string change = (currentChain - currentNode).ToString();
                     Snapshot.Helper.UpdateStatusLabel(mainMenuDifferenceLBL, change);
 
                     if(int.Parse(change) > 50)
                     {
                         Process.Start("cmd", string.Format("/c \"taskkill /IM NineChronicles.Headless.Executable.exe /F"));
+                        Task.Delay(5000).Wait();
                         Snapshot.Helper.UpdateStatusLabel(mainMenuRunningLBL, "No");
+                        Task.Delay(1000).Wait();
                         Snapshot.Helper.UpdateStatusLabel(mainMenuPreloadLBL, "Unknown");
+                        Task.Delay(1000).Wait();
                         preload = 1;
-                        new Thread(async () => { await Node.Monitoring.PreloadDone(this); }).Start();
+                        Snapshot.Helper.UpdateStatusLabel(mainMenuNodeBlockLBL, "0");
                         new Thread(async () => { await NodeMonitorTaskWorker(); }).Start();
+                        new Thread(async () => { await Node.Monitoring.PreloadDone(this); }).Start();
+                        Task.Delay(1000).Wait();
+                        System.Diagnostics.Process.Start(Application.StartupPath + "/runnode.bat");
+                        Task.Delay(60000).Wait();
+                        new Thread(async () => { await Node.Monitoring.LocalNodeMonitor(mainMenuNodeBlockLBL, mainMenuRunningLBL); }).Start();
                     }
                 }
 
